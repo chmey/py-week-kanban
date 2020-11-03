@@ -1,2 +1,3 @@
-# TODO: POSTGRESQL Container
+version: '3'
 # TODO: Web/Flask Container
+# TODO: POSTGRESQL Container

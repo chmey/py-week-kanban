@@ -1,1 +1,0 @@
-from week_kanban import app

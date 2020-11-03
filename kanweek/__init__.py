@@ -8,4 +8,4 @@ db = SQLAlchemy()
 migrate = Migrate(app, db)
 
 
-from week_kanban import routes # noqa
+from . import routes # noqa

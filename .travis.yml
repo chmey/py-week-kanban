@@ -1,5 +1,16 @@
 language: python
 services:
   - docker
-script:
-  - docker build -t chmey/kanweek:dev .
+branches:
+  only:
+    - main
+jobs:
+  include:
+    - stage: "lint"
+      install: 'pip install flake8'
+      script: flake8 ./kanweek --extend-ignore=E501
+    - stage: "build"
+      script: docker build -t chmey/kanweek:dev .
+stages:
+  - lint
+  - build

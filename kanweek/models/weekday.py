@@ -1,8 +1,7 @@
-from mongoalchemy import Document, StringField, ReferenceField, ListField
-from .task import Task
+from kanweek.extensions import db
 
 
-class Weekday(Document):
+class Weekday(db.Document):
     __tablename__ = 'weekday'
-    name = StringField()
-    tasks = ListField(ReferenceField(Task))
+    name = db.StringField()
+    tasks = db.ListField(db.DocumentField("Task"))

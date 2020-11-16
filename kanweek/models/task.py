@@ -1,16 +1,14 @@
-from mongoalchemy import Document, StringField, ReferenceField, ListField, DateTimeField
+from kanweek.extensions import db
 from datetime import datetime
-from .weekday import Weekday
-from .label import Label
 
 
-class Task(Document):
-    title = StringField()
-    description = StringField()
-    created_date = DateTimeField()
-    modified_date = DateTimeField()
-    labels = ListField(ReferenceField(Label))
-    weekday = ReferenceField(Weekday)
+class Task(db.Document):
+    title = db.StringField()
+    description = db.StringField()
+    created_date = db.DateTimeField()
+    modified_date = db.DateTimeField()
+    labels = db.ListField(db.DocumentField("Label"))
+    weekday = db.DocumentField("Weekday")
 
     def __init__(self):
         self.created_date = datetime.now()

@@ -1,15 +1,13 @@
-from mongoalchemy import Document, StringField, ReferenceField, ListField, DateTimeField
+from kanweek.extensions import db
 from datetime import datetime
-from .user import User
-from .task import Task
 
 
-class Label(Document):
-    name = StringField()
-    created_date = DateTimeField()
-    modified_date = DateTimeField()
-    user = ReferenceField(User)
-    tasks = ListField(ReferenceField(Task))
+class Label(db.Document):
+    name = db.StringField()
+    created_date = db.DateTimeField()
+    modified_date = db.DateTimeField()
+    user = db.DocumentField("User")
+    tasks = db.ListField(db.DocumentField("Task"))
 
     def __init__(self):
         self.created_date = datetime.now()

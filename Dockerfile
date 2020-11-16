@@ -18,4 +18,4 @@ USER app
 
 
 EXPOSE 5000
-ENTRYPOINT ["flask", "run"]
+ENTRYPOINT ["venv/bin/gunicorn", "--bind", "0.0.0.0:5000", "kanweek.wsgi:app"]

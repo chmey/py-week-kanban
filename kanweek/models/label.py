@@ -1,16 +1,15 @@
-from sqlalchemy import Model, Column, String, DateTime, Integer, ForeignKey, relationship
+from mongoalchemy import Document, StringField, ReferenceField, ListField, DateTimeField
 from datetime import datetime
-from .associations import tasks_labels
+from .user import User
+from .task import Task
 
 
-class Label(Model):
-    __tablename__ = 'label'
-    id = Column(Integer(), primary_key=True)
-    name = Column(String())
-    created_date = Column(DateTime())
-    modified_date = Column(DateTime(), nullable=True)
-    user_id = Column(Integer(), ForeignKey('user.id'))  # TODO: Can Label only belong to one user?
-    tasks = relationship("Task", secondary=tasks_labels)
+class Label(Document):
+    name = StringField()
+    created_date = DateTimeField()
+    modified_date = DateTimeField()
+    user = ReferenceField(User)
+    tasks = ListField(ReferenceField(Task))
 
     def __init__(self):
         self.created_date = datetime.now()

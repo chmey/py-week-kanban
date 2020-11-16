@@ -1,17 +1,16 @@
-from sqlalchemy import Model, Column, Integer, String, DateTime, ForeignKey, relationship
+from mongoalchemy import Document, StringField, ReferenceField, ListField, DateTimeField
 from datetime import datetime
-from .associations import tasks_labels
+from .weekday import Weekday
+from .label import Label
 
 
-class Task(Model):
-    __tablename__ = 'task'
-    id = Column(Integer(), primary_key=True)
-    title = Column(String(), nullable=True)
-    description = Column(String(), nullable=True)
-    created_date = Column(DateTime())
-    modified_date = Column(DateTime(), nullable=True)
-    labels = relationship("Label", secondary=tasks_labels)
-    weekday_id = Column(Integer(), ForeignKey('weekday.id'))
+class Task(Document):
+    title = StringField()
+    description = StringField()
+    created_date = DateTimeField()
+    modified_date = DateTimeField()
+    labels = ListField(ReferenceField(Label))
+    weekday = ReferenceField(Weekday)
 
     def __init__(self):
         self.created_date = datetime.now()

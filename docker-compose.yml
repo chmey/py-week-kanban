@@ -9,3 +9,5 @@ services:
         - db
   db:
     image: mongo
+    expose:
+      - 27017

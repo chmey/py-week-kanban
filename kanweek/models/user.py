@@ -1,5 +1,4 @@
 from kanweek.extensions import db, ma
-from datetime import datetime
 
 
 class User(db.Document):
@@ -9,9 +8,6 @@ class User(db.Document):
     join_date = db.DateTimeField()
     modified_date = db.DateTimeField()
     labels = db.ListField(db.DocumentField("Label"))
-
-    def __init__(self):
-        self.join_date = datetime.now()
 
 
 class UserSchema(ma.Schema):

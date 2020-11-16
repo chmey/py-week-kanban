@@ -1,14 +1,22 @@
-from kanweek.extensions import db
-from datetime import datetime
+from kanweek.extensions import db, ma
+from marshmallow import fields
 
 
 class Task(db.Document):
+    id = db.ObjectIdField()
     title = db.StringField()
     description = db.StringField()
     created_date = db.DateTimeField()
-    modified_date = db.DateTimeField()
-    labels = db.ListField(db.DocumentField("Label"))
-    weekday = db.DocumentField("Weekday")
+    modified_date = db.DateTimeField(required=False)
+    labels = db.ListField(db.DocumentField("Label"), required=False)
+    weekday = db.DocumentField("Weekday", required=False)
 
-    def __init__(self):
-        self.created_date = datetime.now()
+
+class TaskSchema(ma.Schema):
+    id = fields.Str()
+    title = fields.Str()
+    description = fields.Str()
+    created_date = fields.DateTime()
+
+    class Meta:
+        fields = ("id", "title", "description", "created_date", "modified_date")

@@ -8,7 +8,6 @@ RUN venv/bin/pip install -r requirements.txt
 RUN venv/bin/pip install gunicorn
 
 COPY kanweek kanweek
-COPY migrations migrations
 COPY kanweek.py run.py ./
 
 ENV FLASK_APP kanweek.py

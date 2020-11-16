@@ -10,10 +10,9 @@ jobs:
       install: 'pip install flake8'
       script: flake8 ./kanweek --extend-ignore=E501
     - stage: "build"
-      script: docker build -t chmey/kanweek:dev .
-    - stage: "push"
       before_script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      script: docker push chmey/kanweek:dev
+      script: docker build -t chmey/kanweek:dev .
+      after_success: docker push chmey/kanweek:dev
 stages:
   - lint
   - build

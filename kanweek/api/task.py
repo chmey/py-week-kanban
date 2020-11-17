@@ -2,6 +2,7 @@ from .common import bpAPI
 from flask import jsonify, request
 from kanweek.models.task import Task, TaskSchema
 from datetime import datetime
+from mongoengine import errors
 
 siTaskSchema = TaskSchema()
 plTaskSchema = TaskSchema(many=True)
@@ -39,3 +40,35 @@ def create_task():
         return jsonify({"status": "ok", "data": siTaskSchema.dump(newTask)})
     else:
         return jsonify({"status": "error", "message": "Bad Request. Must supply JSON Data."}), 400
+
+
+@bpAPI.route('/api/v1/task/<string:id>', methods=['PUT'])
+def update_task(id=None):
+    if id:
+        task = Task.objects.get(id=id)
+        if task:
+            if request.is_json:
+                put = request.get_json()
+                try:
+                    task.update(**put)
+                except Exception:
+                    raise
+            return jsonify({"status": "ok", "data": siTaskSchema.dump(task)})
+        else:
+            return jsonify({"status": "error", "message": "No task found for ID {}.".format(id)}), 404
+    else:
+        return jsonify({"status": "error", "message": "Missing task ID parameter."}), 400
+
+
+@bpAPI.route('/api/v1/task/<string:id>', methods=['DELETE'])
+def delete_task(id=None):
+    if id:
+        try:
+            Task.objects.get(id=id).delete()
+        except errors.DoesNotExist:
+            return jsonify({"status": "error", "message": "No task found for ID {}.".format(id)}), 404
+        except Exception:
+            raise
+            return jsonify({"status": "error", "message": "Deletion for ID {} failed.".format(id)}), 500
+    else:
+        return jsonify({"status": "error", "message": "Missing task ID parameter."}), 400

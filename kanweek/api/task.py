@@ -11,7 +11,7 @@ plTaskSchema = TaskSchema(many=True)
 @bpAPI.route('/api/v1/task/<string:id>', methods=['GET'])
 def read_task(id=None):
     if id:
-        task = Task.query.get(id)
+        task = Task.objects.get(id=id)
         if task:
             return jsonify({"status": "ok", "data": siTaskSchema.dump(task)})
         else:

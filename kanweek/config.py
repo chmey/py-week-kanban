@@ -1,19 +1,24 @@
 class Config(object):
     DEBUG = False
     TESTING = False
-    MONGOALCHEMY_DATABASE = 'kanweek'
-    MONGOALCHEMY_SERVER = 'db'
-    MONGOALCHEMY_PORT = 27017
+    MONGODB_SETTINGS = {
+        'db': 'kanweek',
+        'host': 'db',
+        'port': 27017
+    }
 
 
 class ProductionConfig(Config):
     DEBUG = False
-    MONGOALCHEMY_SAFE_SESSION = True
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MONGOALCHEMY_SERVER = 'localhost'
+    MONGODB_SETTINGS = {
+        'db': 'kanweek',
+        'host': 'localhost',
+        'port': 27017
+    }
 
 
 class TestingConfig(Config):

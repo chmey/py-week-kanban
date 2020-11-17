@@ -5,7 +5,7 @@ from datetime import datetime
 
 class Label(db.Document):
     name = db.StringField(required=True)
-    modified_date = db.DateTimeField(required=False, default=datetime.utcnow())
+    dateModified = db.DateTimeField(required=False, default=datetime.utcnow())
     owner = db.ReferenceField("User")
     tasks = db.ListField(db.ReferenceField("Task"))
 
@@ -13,7 +13,7 @@ class Label(db.Document):
 class LabelSchema(ma.Schema):
     id = fields.Str()
     name = fields.Str()
-    modified_date = fields.DateTime()
+    dateModified = fields.DateTime()
 
     class Meta:
-        fields = ("id", "name", "modified_date")
+        fields = ("id", "name", "dateModified")

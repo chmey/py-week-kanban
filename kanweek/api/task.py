@@ -26,6 +26,7 @@ def read_task(id=None):
 def create_task():
     if request.is_json:
         post = request.get_json()['data']
+        print(post)
         newTask = Task()
         try:
             newTask.title = post['title']
@@ -36,6 +37,7 @@ def create_task():
         try:
             newTask.save()
         except Exception:
+            raise
             return jsonify({"status": "error", "message": "Failed saving the values to the database."}), 500
 
         return jsonify({"status": "ok", "data": siTaskSchema.dump(newTask)}), 201
@@ -49,9 +51,10 @@ def update_task(id=None):
         task = Task.objects.get(id=id)
         if task:
             if request.is_json:
-                data = request.get_json()['data']
                 try:
+                    data = request.get_json()['data']
                     task.update(**data)
+                    task = Task.objects.get(id=id)
                 except Exception:
                     raise
             return jsonify({"status": "ok", "data": siTaskSchema.dump(task)})
@@ -61,7 +64,7 @@ def update_task(id=None):
         return jsonify({"status": "error", "message": "Missing task ID parameter."}), 400
 
 
-@bpAPI.route('/api/v1/tasks/', methods=['GET'])
+@bpAPI.route('/api/v1/tasks/', methods=['DELETE'])
 @bpAPI.route('/api/v1/tasks/<string:id>', methods=['DELETE'])
 def delete_task(id=None):
     if id:
@@ -74,8 +77,8 @@ def delete_task(id=None):
             return jsonify({"status": "error", "message": "Deletion for ID {} failed.".format(id)}), 500
     else:
         try:
-            Task.drop()
+            Task.objects.delete()
             return jsonify({"status": "ok", "data": ''}), 200
         except Exception:
             raise
-            return jsonify({"status": "error", "message": "Deletion failed."), 500
+            return jsonify({"status": "error", "message": "Deletion failed."}), 500

@@ -8,7 +8,7 @@ jobs:
   include:
     - stage: "lint"
       install: 'pip install flake8'
-      script: flake8 ./kanweek --extend-ignore=E501
+      script: flake8 ./backend/kanweek --extend-ignore=E501
     - stage: "build"
       before_install: 'pip install wheel'
       before_script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin

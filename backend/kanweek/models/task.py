@@ -10,7 +10,7 @@ class Task(db.Document):
     dateModified = db.DateTimeField(required=False)
     labels = db.ListField(db.ReferenceField("Label"), required=False)
     weekday = db.IntField(required=False)
-    owner = db.ReferenceField('User', required=True)
+    owner = db.ReferenceField('User', required=False)
 
 
 class TaskSchema(ma.Schema):

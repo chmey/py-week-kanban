@@ -1,0 +1,24 @@
+<html>
+<body>
+  <!-- React mount point -->
+  <div id="app"></div>
+  <!-- Download React library scripts -->
+  <script src="{{ url_for ('static', filename='kanweek/build/main.js')}}"></script>
+  <script>
+    // Define the React app
+    const App = () => {
+        const [count, setCount] = React.useState(0)
+        const onClick = () => setCount(c => c + 1)
+        return (
+            <div>
+            <h1>The count is {count}</h1>
+            <button onClick={onClick}>Count</button>
+            </div>
+        )
+    }
+    // Mount the app to the mount point.
+    const root = document.getElementById('app')
+    ReactDOM.render(React.createElement(App, null, null), root)
+  </script>
+</body>
+</html>

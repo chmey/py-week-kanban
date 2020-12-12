@@ -1,6 +1,7 @@
 import {
     Card,
     CardContent,
+    CardHeader,
     CardActionArea,
     Typography,
     IconButton
@@ -11,8 +12,9 @@ import {
   import arrowright from '@iconify/icons-jam/arrow-right';
   import check from '@iconify/icons-jam/check';
   import close from '@iconify/icons-jam/close';
+  import archive from '@iconify/icons-jam/archive';
   import { withStyles } from '@material-ui/core/styles';
-  import React from 'react';
+  import React, { Component } from 'react';
 
   const CardTask = withStyles({
     root: {
@@ -40,6 +42,7 @@ import {
         this.moveLeft = this.moveLeft.bind(this);
         this.moveRight = this.moveRight.bind(this);
         this.toggleCheck = this.toggleCheck.bind(this);
+        this.archiveTask = this.archiveTask.bind(this);
     }
 
     moveLeft(e) {
@@ -53,18 +56,22 @@ import {
     toggleCheck(e) {
         this.props.toggleCheck(this.props.id);
         e.preventDefault();
+    }
+    archiveTask(e) {
+        this.props.archiveTask(this.props.id);
+        e.preventDefault();
     }    
     render() {
         var middleActionButton;
         if (this.props.completed) {
             middleActionButton = (
-                <IconButton onClick={this.toggleCheck} aria-label="move left">
+                <IconButton color={'secondary'} onClick={this.toggleCheck} aria-label="uncheck task">
                     <Icon icon={close} />
                </IconButton>
             );
         } else {
             middleActionButton = (
-                <IconButton onClick={this.toggleCheck} aria-label="move left">
+                <IconButton color={'success'} onClick={this.toggleCheck} aria-label="check task">
                     <Icon icon={check} />
                 </IconButton>
             );
@@ -72,23 +79,33 @@ import {
         return (
             <GridFlexGrow1 item>
                 <CardTask style={{textDecoration : this.props.completed ? 'line-through' : 'none' }} variant="outlined"> 
+                    <CardHeader 
+                        action={
+                            this.props.completed ?
+                            <IconButton size={'small'} color={'secondary'} onClick={this.archiveTask} aria-label="archive task">
+                                <Icon icon={archive} />
+                            </IconButton>
+                            : undefined
+                        }
+                        title={this.props.title}
+                        titleTypographyProps={{'variant': 'body1'}}
+                    >
+                    </CardHeader>
+                    { 
+                    this.props.description ?
                     <CardContent>
-                        {/* <Typography color="textSecondary" variant="subtitle2">
-                        {new Date(this.props.dateCreated).toLocaleString()}
-                        </Typography> */}
-                        <Typography variant="body1">
-                        {this.props.title}
-                        </Typography>
                         <Typography variant="caption" component="p">
                         {this.props.description}
                         </Typography>
                     </CardContent>
+                    : undefined
+                    }
                     <CardActionAreaJustified component={"div"}>
-                        <IconButton onClick={this.moveLeft} aria-label="move left">
+                        <IconButton color={'primary'} onClick={this.moveLeft} aria-label="move left">
                             <Icon icon={arrowleft} />
                         </IconButton>
                         {middleActionButton}
-                        <IconButton onClick={this.moveRight} aria-label="move right">
+                        <IconButton color={'primary'} onClick={this.moveRight} aria-label="move right">
                             <Icon icon={arrowright} />
                         </IconButton>
                     </CardActionAreaJustified>

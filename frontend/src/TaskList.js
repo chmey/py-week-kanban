@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import TaskItem from './TaskItem';
 import { withStyles } from '@material-ui/core/styles';
 export default function TaskList(props) {
-    const { tasks, moveTaskLeft, moveTaskRight, toggleCheck } = props;
+    const { tasks, archiveTask, moveTaskLeft, moveTaskRight, toggleCheck } = props;
     const GridWeek = withStyles({
         root: {
 
@@ -36,9 +36,9 @@ export default function TaskList(props) {
                         </GridHeader>
                         <GridTaskList container item>
                             {tasks
-                            .filter(task => task.weekday === i)
+                            .filter(task => task.weekday === i && !task.archived)
                             .map((task) => {
-                                return <TaskItem toggleCheck={toggleCheck} moveTaskLeft={moveTaskLeft} moveTaskRight={moveTaskRight} key={task.id} {...task} />
+                                return <TaskItem archiveTask={archiveTask} toggleCheck={toggleCheck} moveTaskLeft={moveTaskLeft} moveTaskRight={moveTaskRight} key={task.id} {...task} />
                             })}
                         </GridTaskList>
                     </GridDay>

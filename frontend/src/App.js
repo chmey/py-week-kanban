@@ -17,6 +17,7 @@ export default class App extends Component {
     this.moveTaskLeft = this.moveTaskLeft.bind(this);
     this.moveTaskRight = this.moveTaskRight.bind(this);
     this.toggleTaskCompleted = this.toggleTaskCompleted.bind(this);
+    this.archiveTask = this.archiveTask.bind(this);
   }
   state = {
     tasks: []
@@ -70,6 +71,17 @@ export default class App extends Component {
       return {tasks: updatedTasks};
     });
   }
+  archiveTask(taskId) {
+    this.setState((state, props) => {
+      let updatedTasks = [...state.tasks];
+      const taskIndex = this.state.tasks.findIndex(element => element.id === taskId )
+      let task = {...updatedTasks[taskIndex]}
+      task.archived = true;
+      updatedTasks[taskIndex] = task;
+      this.updateTask(task);
+      return {tasks: updatedTasks};
+    });
+  }
   componentDidMount(){
     fetch('http://localhost:5000/api/v1/tasks/')
     .then(res => res.json())
@@ -87,12 +99,13 @@ export default class App extends Component {
           <Container style={{height: "inherit"}} maxWidth={false}>
             <Header addTask={this.addTask} title="kanweek" />
             <main> 
-              <TaskList toggleCheck={this.toggleTaskCompleted} moveTaskLeft={this.moveTaskLeft} moveTaskRight={this.moveTaskRight} tasks={this.state.tasks}/>
+              <TaskList archiveTask={this.archiveTask} toggleCheck={this.toggleTaskCompleted} moveTaskLeft={this.moveTaskLeft} moveTaskRight={this.moveTaskRight} tasks={this.state.tasks}/>
             </main>
-            <Box>
-              <Footer/>
-            </Box>
+            
           </Container>
+          <Box width={1} style={{position: "absolute", bottom: "1em"}}>
+              <Footer/>
+          </Box>
         </div>
       </React.Fragment>
     )

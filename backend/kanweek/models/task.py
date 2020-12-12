@@ -13,6 +13,7 @@ class Task(db.Document):
     owner = db.ReferenceField('User', required=False)
     completed = db.BooleanField(required=False, default=False)
     archived = db.BooleanField(required=False, default=False)
+    dateDue = db.DateTimeField(required=False)
 
 
 class TaskSchema(ma.Schema):
@@ -24,6 +25,7 @@ class TaskSchema(ma.Schema):
     weekday = fields.Integer()
     completed = fields.Boolean()
     archived = fields.Boolean()
+    dateDue = fields.DateTime()
 
     class Meta:
-        fields = ("id", "title", "description", "dateCreated", "dateModified", "weekday", "completed", "archived")
+        fields = ("id", "title", "description", "dateCreated", "dateModified", "weekday", "completed", "archived", "dateDue")

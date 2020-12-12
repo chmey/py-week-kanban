@@ -15,6 +15,7 @@ import {
   import archive from '@iconify/icons-jam/archive';
   import { withStyles } from '@material-ui/core/styles';
   import React, { Component } from 'react';
+  import { format, parseISO } from 'date-fns';
 
   const CardTask = withStyles({
     root: {
@@ -44,7 +45,9 @@ import {
         this.toggleCheck = this.toggleCheck.bind(this);
         this.archiveTask = this.archiveTask.bind(this);
     }
-
+    printDueDate() {
+        return 'Due: ' + format(parseISO(this.props.dateDue), 'dd MMMM yyyy, HH:mm');
+    }
     moveLeft(e) {
         this.props.moveTaskLeft(this.props.id);
         e.preventDefault();
@@ -71,7 +74,7 @@ import {
             );
         } else {
             middleActionButton = (
-                <IconButton color={'success'} onClick={this.toggleCheck} aria-label="check task">
+                <IconButton color={'primary'} onClick={this.toggleCheck} aria-label="check task">
                     <Icon icon={check} />
                 </IconButton>
             );
@@ -89,6 +92,12 @@ import {
                         }
                         title={this.props.title}
                         titleTypographyProps={{'variant': 'body1'}}
+                        subheader={
+                            this.props.dateDue ?
+                            this.printDueDate()
+                            : undefined
+                        }
+                        subheaderTypographyProps={{'variant': 'caption'}}
                     >
                     </CardHeader>
                     { 

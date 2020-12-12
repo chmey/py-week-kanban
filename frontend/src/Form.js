@@ -1,4 +1,5 @@
 import React from 'react';
+import DateFnsUtils from '@date-io/date-fns';
 import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,14 +7,18 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
+import { formatISO } from 'date-fns';
 export default class TaskForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {open: this.props.open, title: '', description: '', weekday: 0}
+    this.state = {open: this.props.open, title: '', description: '', weekday: 0, dateDue: null}
   }
   handleChange = (event) => {
     this.setState({[event.target.name]: event.target.value});
+  }
+  setDueDate = (newDate) => {
+    this.setState({dateDue: formatISO(newDate)})
   }
   
   handleSubmit = (event) => {
@@ -54,6 +59,18 @@ export default class TaskForm extends React.Component {
                       rows={5}
                       placeholder="Hoover the kitchen!"
                       />
+              </div>
+              <div>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <DateTimePicker
+                  clearable
+                  variant="dialog"
+                  name="dateDue"
+                  label="Due"
+                  value={this.state.dateDue}
+                  onChange={date => this.setDueDate(date)}
+                />
+              </MuiPickersUtilsProvider>
               </div>
           </form>
           </DialogContent>

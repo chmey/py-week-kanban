@@ -32,6 +32,11 @@ def create_task():
             newTask.title = post['title']
             newTask.description = post['description']
             newTask.weekday = post['weekday']
+            if post['dateDue']:
+                try:
+                    newTask.dateDue = datetime.fromisoformat(post['dateDue'])
+                except Exception:
+                    return jsonify({"status": "error", "message": "Bad Request. Could not parse the due date."}), 400
             newTask.dateCreated = datetime.now()
         except KeyError:
             return jsonify({"status": "error", "message": "Bad Request. Must supply all required values."}), 400

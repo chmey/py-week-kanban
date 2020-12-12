@@ -18,7 +18,7 @@ def read_task(id=None):
         else:
             return jsonify({"status": "error", "message": "No task found for ID {}.".format(id)}), 404
     else:
-        tasks = Task.objects.all()
+        tasks = Task.objects(archived=False).all()
         return jsonify({"status": "ok", "data": plTaskSchema.dump(tasks)}), 200
 
 
@@ -77,12 +77,10 @@ def delete_task(id=None):
         except errors.DoesNotExist:
             return jsonify({"status": "error", "message": "No task found for ID {}.".format(id)}), 404
         except Exception:
-            raise
             return jsonify({"status": "error", "message": "Deletion for ID {} failed.".format(id)}), 500
     else:
         try:
             Task.objects.delete()
             return jsonify({"status": "ok", "data": ''}), 200
         except Exception:
-            raise
             return jsonify({"status": "error", "message": "Deletion failed."}), 500

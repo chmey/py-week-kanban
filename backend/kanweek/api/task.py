@@ -71,16 +71,28 @@ def update_task(id=None):
 @bpAPI.route('/api/v1/tasks/', methods=['DELETE'])
 @bpAPI.route('/api/v1/tasks/<string:id>', methods=['DELETE'])
 def delete_task(id=None):
+    permanently = request.args.get('permanent', False)
     if id:
         try:
-            Task.objects.get(id=id).delete()
+            task = Task.objects.get(id=id)
+            if permanently:
+                task.delete()
+            else:
+                task.archived = True
+                task.save()
         except errors.DoesNotExist:
             return jsonify({"status": "error", "message": "No task found for ID {}.".format(id)}), 404
         except Exception:
             return jsonify({"status": "error", "message": "Deletion for ID {} failed.".format(id)}), 500
     else:
         try:
-            Task.objects.delete()
+            tasks = Task.objects.delete()
+            if permanently:
+                tasks.delete()
+            else:
+                for task in tasks:
+                    task.archived = True
+                    task.save()
             return jsonify({"status": "ok", "data": ''}), 200
         except Exception:
             return jsonify({"status": "error", "message": "Deletion failed."}), 500

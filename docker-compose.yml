@@ -2,7 +2,7 @@ version: '3'
 services: 
   web:
     image: chmey/kanweek:latest
-    build: .
+    build: backend
     ports:
         - "5000:5000"
     depends_on:
@@ -11,3 +11,5 @@ services:
     image: mongo
     expose:
       - 27017
+    ports:
+      - 27017:27017

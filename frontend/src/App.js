@@ -7,7 +7,7 @@ import 'fontsource-roboto';
 import { Box } from '@material-ui/core';
 
 
-import mockData from './mockData';
+// import mockData from './mockData';
 
 
 export default class App extends Component {
@@ -74,8 +74,9 @@ export default class App extends Component {
     fetch('http://localhost:5000/api/v1/tasks/')
     .then(res => res.json())
     .then((data) => {
-      let tasks = data.data.concat(mockData)
-      this.setState({ tasks: tasks})
+      // let tasks = data.data.concat(mockData)
+      let tasks = data.data;
+      this.setState({ tasks: tasks});
     })
     .catch(console.log);
   }

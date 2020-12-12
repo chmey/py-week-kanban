@@ -31,6 +31,7 @@ def create_task():
         try:
             newTask.title = post['title']
             newTask.description = post['description']
+            newTask.weekday = post['weekday']
             newTask.dateCreated = datetime.now()
         except KeyError:
             return jsonify({"status": "error", "message": "Bad Request. Must supply all required values."}), 400
@@ -53,6 +54,9 @@ def update_task(id=None):
             if request.is_json:
                 try:
                     data = request.get_json()['data']
+                    data['dateModified'] = datetime.now()
+                    data['dateCreated'] = task.dateCreated
+                    data['id'] = task.id
                     task.update(**data)
                     task = Task.objects.get(id=id)
                 except Exception:

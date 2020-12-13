@@ -7,7 +7,7 @@ import TaskForm from './Form';
 
 
 export default function Header(props) {
-  const {addTask, title } = props;
+  const {addTask, title, isAuthenticated } = props;
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -30,9 +30,13 @@ export default function Header(props) {
           >
           {title}
         </Typography>
-        <Button  onClick={handleClickOpen} variant="contained" color="primary">
-          Add Task
-        </Button>
+        {
+          isAuthenticated ?
+            <Button  onClick={handleClickOpen} variant="contained" color="primary">
+              Add Task
+            </Button>
+          : null
+        }
       </Toolbar>
       <TaskForm handleClose={handleClose} open={open} addTask={addTask}/>
     </React.Fragment>

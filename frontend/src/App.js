@@ -1,14 +1,9 @@
-import Container from '@material-ui/core/Container';
-import TaskList from './TaskList';
-import Footer from './Footer';
-import Header from './Header';
+
 import React, {Component} from 'react';
 import 'fontsource-roboto';
-import { Box } from '@material-ui/core';
-
-
-// import mockData from './mockData';
-
+import { BrowserRouter, Route, Switch} from 'react-router-dom';
+import About from './About';
+import Board from './Board';
 
 export default class App extends Component {
   constructor(props) {
@@ -20,7 +15,8 @@ export default class App extends Component {
     this.archiveTask = this.archiveTask.bind(this);
   }
   state = {
-    tasks: []
+    tasks: [],
+    isAuthenticated: false,
   }
   addTask(task) {
     this.setState((state, props) => ({
@@ -86,7 +82,6 @@ export default class App extends Component {
     fetch('http://localhost:5000/api/v1/tasks/')
     .then(res => res.json())
     .then((data) => {
-      // let tasks = data.data.concat(mockData)
       let tasks = data.data;
       this.setState({ tasks: tasks});
     })
@@ -94,20 +89,26 @@ export default class App extends Component {
   }
   render() {
     return (
-      <React.Fragment>
-        <div >
-          <Container style={{height: "inherit"}} maxWidth={false}>
-            <Header addTask={this.addTask} title="kanweek" />
-            <main> 
-              <TaskList archiveTask={this.archiveTask} toggleCheck={this.toggleTaskCompleted} moveTaskLeft={this.moveTaskLeft} moveTaskRight={this.moveTaskRight} tasks={this.state.tasks}/>
-            </main>
-            
-          </Container>
-          <Box width={1} style={{position: "absolute", bottom: "1em"}}>
-              <Footer/>
-          </Box>
-        </div>
-      </React.Fragment>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path='/'>
+            <Board addTask={this.addTask} 
+              title={"kanweek"} 
+              archiveTask={this.archiveTask} 
+              toggleCheck={this.toggleTaskCompleted} 
+              moveTaskLeft={this.moveTaskLeft} 
+              moveTaskRight={this.moveTaskRight} 
+              tasks={this.state.tasks}
+              isAuthenticated={this.state.isAuthenticated}
+              setAuthenticated={(authStatus) => this.setState((state) =>  { return {isAuthenticated: authStatus}})}
+                />
+          </Route>
+          <Route exact path='/about'>
+            <About />
+          </Route>
+
+        </Switch>
+      </BrowserRouter>
     )
   }
 };

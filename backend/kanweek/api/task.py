@@ -1,5 +1,5 @@
 from .common import bpAPI
-from flask import jsonify, request
+from flask import jsonify, request, url_for
 from kanweek.models.task import Task, TaskSchema
 from datetime import datetime
 from mongoengine import errors
@@ -43,10 +43,9 @@ def create_task():
         try:
             newTask.save()
         except Exception:
-            raise
             return jsonify({"status": "error", "message": "Failed saving the values to the database."}), 500
 
-        return jsonify({"status": "ok", "data": siTaskSchema.dump(newTask)}), 201
+        return jsonify({"status": "ok", "data": siTaskSchema.dump(newTask)}), 201, {'Location': url_for('read_task', id=newTask.id, _external=True)}
     else:
         return jsonify({"status": "error", "message": "Bad Request. Must supply JSON Data."}), 400
 

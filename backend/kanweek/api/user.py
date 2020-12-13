@@ -1,5 +1,5 @@
 from .common import bpAPI # noqa
-from flask import jsonify, request
+from flask import jsonify, request, url_for
 from kanweek.models.user import User, UserSchema
 from kanweek.extensions import db # noqa
 from datetime import datetime
@@ -45,7 +45,7 @@ def create_user():
         except Exception:
             return jsonify({"status": "error", "message": "Failed saving the values to the database."}), 500
 
-        return jsonify({"status": "ok", "data": siUserSchema.dump(newUser)}), 201
+        return jsonify({"status": "ok", "data": siUserSchema.dump(newUser)}), 201, {'Location': url_for('get_user', id=newUser.id, _external=True)}
     else:
         return jsonify({"status": "error", "message": "Bad Request. Must supply JSON Data."}), 400
 

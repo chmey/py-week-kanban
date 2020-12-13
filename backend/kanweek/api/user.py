@@ -17,7 +17,7 @@ def read_user(id=None):
         if user:
             return jsonify({"status": "ok", "data": siUserSchema.dump(user)})
         else:
-            return jsonify({"status": "error", "message": "No task found for ID {}.".format(id)}), 404
+            return jsonify({"status": "error", "message": "No user found for ID {}.".format(id)}), 404
     else:
         users = User.objects().all()
         return jsonify({"status": "ok", "data": plUserSchema.dump(users)}), 200
@@ -27,12 +27,11 @@ def read_user(id=None):
 def create_user():
     if request.is_json:
         post = request.get_json()['data']
-        print(post)
         newUser = User()
         try:
             newUser.email = post['email']
             newUser.set_password_hash(post['password'])
-            if post['username']:
+            if 'username' in post:
                 try:
                     newUser.username = post['username']
                 except Exception:
@@ -45,7 +44,7 @@ def create_user():
         except Exception:
             return jsonify({"status": "error", "message": "Failed saving the values to the database."}), 500
 
-        return jsonify({"status": "ok", "data": siUserSchema.dump(newUser)}), 201, {'Location': url_for('get_user', id=newUser.id, _external=True)}
+        return jsonify({"status": "ok", "data": siUserSchema.dump(newUser)}), 201, {'Location': url_for('api.read_user', id=newUser.id, _external=True)}
     else:
         return jsonify({"status": "error", "message": "Bad Request. Must supply JSON Data."}), 400
 

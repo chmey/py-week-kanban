@@ -14,10 +14,10 @@ class User(db.Document):
     disabled = db.BooleanField(required=False, default=False)
 
     def verify_password(self, check_pw_against):
-        pwd_hash.verify(check_pw_against, self._pwhash)
+        return pwd_hash.verify(check_pw_against, self._pwhash)
 
     def set_password_hash(self, pw_to_hash):
-        self._pwhash = pwd_hash.encrpyt(pw_to_hash)
+        self._pwhash = pwd_hash.encrypt(pw_to_hash)
 
 
 class UserSchema(ma.Schema):

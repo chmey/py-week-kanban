@@ -26,13 +26,12 @@ def read_task(id=None):
 def create_task():
     if request.is_json:
         post = request.get_json()['data']
-        print(post)
         newTask = Task()
         try:
             newTask.title = post['title']
             newTask.description = post['description']
             newTask.weekday = post['weekday']
-            if post['dateDue']:
+            if 'dateDue' in post:
                 try:
                     newTask.dateDue = datetime.fromisoformat(post['dateDue'])
                 except Exception:
@@ -45,7 +44,7 @@ def create_task():
         except Exception:
             return jsonify({"status": "error", "message": "Failed saving the values to the database."}), 500
 
-        return jsonify({"status": "ok", "data": siTaskSchema.dump(newTask)}), 201, {'Location': url_for('read_task', id=newTask.id, _external=True)}
+        return jsonify({"status": "ok", "data": siTaskSchema.dump(newTask)}), 201, {'Location': url_for('api.read_task', id=newTask.id, _external=True)}
     else:
         return jsonify({"status": "error", "message": "Bad Request. Must supply JSON Data."}), 400
 

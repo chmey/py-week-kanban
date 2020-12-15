@@ -14,7 +14,14 @@ export default function AuthModal(props) {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
-    const [formErrorMessage, setFormErrorMessage] = React.useState("");
+    const [formMessage, setFormMessage] = React.useState("");
+    const [formMessageType, setFormMessageType] = React.useState("");
+
+    const message = (type, m) => {
+        setFormMessageType(type)
+        setFormMessage(m);
+    }
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -22,7 +29,7 @@ export default function AuthModal(props) {
         if(isSignUp){
             if (password !== confirmPassword)
             {
-                setFormErrorMessage('The passwords did not match.')
+                message("error", "The passwords did not match.");
             }
             try {
                 fetch('http://localhost:5000/api/v1/users/', {
@@ -34,7 +41,18 @@ export default function AuthModal(props) {
                   body: JSON.stringify({data: {email: email, password: password}})
                 })
                 .then(res => res.json())
-                .then(d => console.log(d))
+                .then(d => {
+                    if(d.status === "ok"){
+                        message("success", "Signup completed. You may login now.");
+                        setPassword("");
+                        setConfirmPassword("");
+                        setSignUp(false);
+
+                    } else {
+                        message(d.status, d.message);
+                    }
+                }
+                    );
               } catch (error) {
                 throw error;
               }  
@@ -51,8 +69,8 @@ export default function AuthModal(props) {
                 .then(res => res.json())
                 .then(d => {
                     if (!d.isAuthenticated)
-                    {
-                        setFormErrorMessage('Login failed.')
+                    {   
+                        message("error", "Login failed.");
                     }
                     else {
                         handleClose();
@@ -74,21 +92,21 @@ export default function AuthModal(props) {
                     <DialogContentText>
                     <form autoComplete="off">
                     <div>
-                        <TextField fullWidth={true} required onChange={e => setEmail(e.target.value)} label="Email Address" placeholder="you@example.com" />
+                        <TextField value={email} fullWidth={true} required onChange={e => setEmail(e.target.value)} label="Email Address" placeholder="you@example.com" />
                     </div>
                     <div>
-                        <TextField fullWidth={true} type="password" onChange={e => setPassword(e.target.value)} required label="Password" placeholder="hunter2" />
+                        <TextField value={password} fullWidth={true} type="password" onChange={e => setPassword(e.target.value)} required label="Password" placeholder="hunter2" />
                     </div>
                     {isSignUp ?
                     <div>
-                        <TextField fullWidth={true} type="password" onChange={e => setConfirmPassword(e.target.value)} required label="Confirm password" placeholder="hunter2" />
+                        <TextField value={confirmPassword} fullWidth={true} type="password" onChange={e => setConfirmPassword(e.target.value)} required label="Confirm password" placeholder="hunter2" />
                     </div>
                     : null
                     }
                     
                     </form>
-                    { formErrorMessage
-                    ? <Box style={{marginTop: "0.5em"}}><Alert severity="error">{formErrorMessage}</Alert></Box>
+                    { formMessage
+                    ? <Box style={{marginTop: "0.5em"}}><Alert severity={formMessageType}>{formMessage}</Alert></Box>
                     : null
                     }
                 </DialogContentText>
@@ -97,7 +115,7 @@ export default function AuthModal(props) {
                     {isSignUp ?
                     <React.Fragment>
                         <Typography variant="caption">
-                            <Link href="#" onClick={() => {setSignUp(false); setFormErrorMessage("")}}>I have an account</Link>
+                            <Link href="#" onClick={() => {setSignUp(false); setFormMessage("")}}>I have an account</Link>
                         </Typography>
                         <Button onClick={handleSubmit} type="submit" variant="contained" color="primary">
                         Register
@@ -106,7 +124,7 @@ export default function AuthModal(props) {
                     : 
                     <React.Fragment>
                         <Typography variant="caption">
-                            <Link href="#" onClick={() => {setSignUp(true); setFormErrorMessage("")}}>Create an account</Link>
+                            <Link href="#" onClick={() => {setSignUp(true); setFormMessage("")}}>Create an account</Link>
                         </Typography>
                         <Button onClick={handleSubmit} type="submit" variant="contained" color="primary">
                         Login

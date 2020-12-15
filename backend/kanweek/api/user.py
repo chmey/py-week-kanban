@@ -27,6 +27,15 @@ def read_user(id=None):
 def create_user():
     if request.is_json:
         post = request.get_json()['data']
+
+        try:
+            if User.objects.get(email=post['email']):
+                return jsonify({"status": "error", "message": "Email is already registered."}), 409
+        except KeyError:
+            return jsonify({"status": "error", "message": "Bad Request. Must supply all required values."}), 400
+        except errors.DoesNotExist:
+            pass
+
         newUser = User()
         try:
             newUser.email = post['email']
